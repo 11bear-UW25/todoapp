@@ -5,61 +5,55 @@ import TaskForm from "./task-form"
 import TaskList from "./task-list"
 import type { Task } from "@/types/task"
 import { v4 as uuidv4 } from "uuid"
+import { createClient } from "@supabase/supabase-js"
+
+// ★ v0 では supabase.ts を使えないので、ここで直接クライアントを作る
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY! // v0 は anon key を使う
+)
 
 export default function TodoApp() {
 
   const [tasks, setTasks] = useState<Task[]>([])
   const [updateTrigger, setUpdateTrigger] = useState(false)
 
+  // ★ GET（一覧取得）
   useEffect(() => {
-    fetch("/api/tasks")
-      .then((res) => res.json())
-      .then((data) => setTasks(data.tasks))
+    const fetchTasks = async () => {
+      const { data, error } = await supabase.from("tasks").select("*")
+      if (!error && data) setTasks(data)
+    }
+    fetchTasks()
   }, [updateTrigger])
 
+  // ★ POST（追加）
   const addTask = async (name: string) => {
-    if (!name.trim()) return;
+    if (!name.trim()) return
 
-    const id = uuidv4();
-    const completed = false;
+    const id = uuidv4()
+    const completed = false
 
-    try {
-      await fetch("/api/tasks", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id, name, completed }),
-      });
-    } catch (error) {
-      console.error("エラーが発生しました", error);
-    }
+    await supabase.from("tasks").insert({ id, name, completed })
+    setUpdateTrigger(!updateTrigger)
+  }
 
-    setUpdateTrigger(!updateTrigger);
-  };
-
+  // ★ DELETE（削除）
   const deleteTask = async (id: string) => {
-    await fetch("/api/tasks", {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id }),
-    });
+    await supabase.from("tasks").delete().eq("id", id)
+    setUpdateTrigger(!updateTrigger)
+  }
 
-    setUpdateTrigger(!updateTrigger);
-  };
+  // ★ PUT（編集）
+  const editTask = async (id: string, name: string) => {
+    const target = tasks.find((t) => t.id === id)
+    if (!target) return
 
- const editTask = async (id: string, name: string) => {
-  const target = tasks.find((t) => t.id === id);
-  if (!target) return;
+    const completed = target.completed
 
-  const completed = target.completed;
-
-  await fetch("/api/tasks", {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ id, name, completed }),
-  });
-
-  setUpdateTrigger(!updateTrigger);
-};
+    await supabase.from("tasks").update({ name, completed }).eq("id", id)
+    setUpdateTrigger(!updateTrigger)
+  }
 
   return (
     <div className="flex flex-col items-center">
