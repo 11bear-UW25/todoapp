@@ -9,8 +9,8 @@ import DeleteConfirmation from "./delete-confirmation"
 
 interface TaskItemProps {
   task: Task
-  onDelete: (id: number) => void
-  onEdit: (id: number, name: string) => void
+  onDelete: (id: string) => void
+  onEdit: (id: string, name: string) => void
 }
 
 export default function TaskItem({ task, onDelete, onEdit }: TaskItemProps) {
@@ -32,7 +32,12 @@ export default function TaskItem({ task, onDelete, onEdit }: TaskItemProps) {
     <li className="flex items-center p-3 border rounded-md bg-card">
       {isEditing ? (
         <div className="flex items-center gap-2 w-full">
-          <Input value={editedName} onChange={(e) => setEditedName(e.target.value)} className="flex-1" autoFocus />
+          <Input
+            value={editedName}
+            onChange={(e) => setEditedName(e.target.value)}
+            className="flex-1"
+            autoFocus
+          />
           <Button size="icon" variant="ghost" onClick={handleEdit}>
             <Check className="h-4 w-4" />
           </Button>
@@ -55,7 +60,10 @@ export default function TaskItem({ task, onDelete, onEdit }: TaskItemProps) {
       )}
 
       {showDeleteConfirmation && (
-        <DeleteConfirmation onConfirm={handleDelete} onCancel={() => setShowDeleteConfirmation(false)} />
+        <DeleteConfirmation
+          onConfirm={handleDelete}
+          onCancel={() => setShowDeleteConfirmation(false)}
+        />
       )}
     </li>
   )
