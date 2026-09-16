@@ -5,7 +5,6 @@ import TaskForm from "./task-form"
 import TaskList from "./task-list"
 import type { Task } from "@/types/task"
 
-
 export default function TodoApp() {
 
   // タスク一覧
