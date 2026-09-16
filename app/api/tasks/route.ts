@@ -1,40 +1,84 @@
-import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { NextResponse } from "next/server";
+import { supabase } from "@/lib/supabase";
 
+// POST
 export async function POST(request: Request) {
-  const { id, name, completed } = await request.json();
-  const { data, error } = await supabase
-    .from("tasks")
-    .insert([{ id, name, completed }])
-    .select();
+  try {
+    const { name, completed } = await request.json();
 
-  return NextResponse.json({ message: "タスク追加成功", data }, { status: 201 });
+    if (!name) {
+      return NextResponse.json({ error: "名前は必須です" }, { status: 400 });
+    }
+
+    const { data, error } = await supabase
+      .from("tasks")
+      .insert([{ name, completed }])
+      .select();
+
+    if (error) throw error;
+
+    return NextResponse.json({ message: "タスク追加成功", data }, { status: 201 });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 }
 
+// GET
 export async function GET() {
-  const { data, error } = await supabase
-    .from("tasks")
-    .select("id, name, completed");
+  try {
+    const { data, error } = await supabase
+      .from("tasks")
+      .select("id, name, completed");
 
-  return NextResponse.json({ tasks: data }, { status: 200 });
+    if (error) throw error;
+
+    return NextResponse.json({ tasks: data }, { status: 200 });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 }
 
+// PUT
 export async function PUT(request: Request) {
-  const { id, name, completed } = await request.json();
-  const { data, error } = await supabase
-    .from("tasks")
-    .update({ name, completed })
-    .eq("id", id);
+  try {
+    const { id, name, completed } = await request.json();
 
-  return NextResponse.json({ message: "タスク更新成功", data }, { status: 200 });
+    if (!id) {
+      return NextResponse.json({ error: "IDは必須です" }, { status: 400 });
+    }
+
+    const { data, error } = await supabase
+      .from("tasks")
+      .update({ name, completed })
+      .eq("id", id)
+      .select();
+
+    if (error) throw error;
+
+    return NextResponse.json({ message: "タスク更新成功", data }, { status: 200 });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 }
 
+// DELETE
 export async function DELETE(request: Request) {
-  const { id } = await request.json();
-  const { error } = await supabase
-    .from("tasks")
-    .delete()
-    .eq("id", id);
+  try {
+    const { id } = await request.json();
 
-  return NextResponse.json({ message: "タスク削除成功" }, { status: 200 });
+    if (!id) {
+      return NextResponse.json({ error: "IDは必須です" }, { status: 400 });
+    }
+
+    const { error } = await supabase
+      .from("tasks")
+      .delete()
+      .eq("id", id);
+
+    if (error) throw error;
+
+    return NextResponse.json({ message: "タスク削除成功" }, { status: 200 });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 }
