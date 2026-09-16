@@ -1,31 +1,67 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import TaskForm from "./task-form"
 import TaskList from "./task-list"
 import type { Task } from "@/types/task"
+import { v4 as uuidv4 } from "uuid"
 
 export default function TodoApp() {
-  const [tasks, setTasks] = useState<Task[]>([
-    { id: 1, name: "サンプルタスク1", completed: false },
-    { id: 2, name: "サンプルタスク2", completed: true },
-    { id: 3, name: "サンプルタスク3", completed: false },
-  ])
 
-  const addTask = (name: string) => {
-    // 機能しないように実装
-    console.log("Add task:", name)
+  const [tasks, setTasks] = useState<Task[]>([])
+  const [updateTrigger, setUpdateTrigger] = useState(false)
+
+  useEffect(() => {
+    fetch("/api/tasks")
+      .then((res) => res.json())
+      .then((data) => setTasks(data.tasks))
+  }, [updateTrigger])
+
+  const addTask = async (name: string) => {
+    // 空欄かどうかをチェック
+    if (!name.trim()) {
+      console.error("タスク名は必須です")
+      return;
+    }
+
+    const id = uuidv4() // 一意なIDを生成
+    const completed = false // 最初は未完了
+
+    try {
+      const response = await fetch("/api/tasks", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, name, completed }),
+      })
+    } catch (error) {
+      console.error("エラーが発生しました", error)
+    }
+
+    setUpdateTrigger(!updateTrigger);
   }
 
-  const deleteTask = (id: number) => {
-    // 機能しないように実装
-    console.log("Delete task:", id)
-  }
+  const deleteTask = async (id: string) => {
+    const response = await fetch("/api/task", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    });
 
-  const editTask = (id: number, name: string) => {
-    // 機能しないように実装
-    console.log("Edit task:", id, name)
-  }
+    const data = await response.json();
+    setUpdateTrigger(!updateTrigger);
+  };
+
+  const editTask = async (id: string, name: string) => {
+    const completed = false;
+
+    const response = await fetch("/api/task", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, name, completed }),
+    });
+
+    setUpdateTrigger(!updateTrigger);
+  };
 
   return (
     <div className="flex flex-col items-center">
