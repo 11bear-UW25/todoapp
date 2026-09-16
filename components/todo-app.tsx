@@ -28,20 +28,24 @@ export default function TodoApp() {
 
   // POST（追加）
   const addTask = async (name: string) => {
-    if (!name.trim()) return
+  if (!name.trim()) return
 
-    const id = uuidv4()
-    const completed = false
+  const id = crypto.randomUUID()   // ← ここで自動生成される
+  const completed = false
 
-    await supabase.from("tasks").insert({ id, name, completed })
-    setUpdateTrigger(!updateTrigger)
-  }
+  await fetch(`${SUPABASE_URL}/rest/v1/tasks`, {
+    method: "POST",
+    headers: {
+      apikey: SUPABASE_ANON_KEY,
+      Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ id, name, completed }),
+  })
 
-  // DELETE（削除）
-  const deleteTask = async (id: string) => {
-    await supabase.from("tasks").delete().eq("id", id)
-    setUpdateTrigger(!updateTrigger)
-  }
+  setUpdateTrigger(!updateTrigger)
+}
+
 
   // PUT（編集）
   const editTask = async (id: string, name: string) => {
