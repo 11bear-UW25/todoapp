@@ -7,10 +7,10 @@ import type { Task } from "@/types/task"
 import { v4 as uuidv4 } from "uuid"
 import { createClient } from "@supabase/supabase-js"
 
-// ★ v0 では supabase.ts を使えないので、ここで直接クライアントを作る
+// v0 では supabase.ts を使えないので、ここで直接クライアントを作る
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY! // v0 は anon key を使う
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
 
 export default function TodoApp() {
@@ -18,7 +18,7 @@ export default function TodoApp() {
   const [tasks, setTasks] = useState<Task[]>([])
   const [updateTrigger, setUpdateTrigger] = useState(false)
 
-  // ★ GET（一覧取得）
+  // GET（一覧取得）
   useEffect(() => {
     const fetchTasks = async () => {
       const { data, error } = await supabase.from("tasks").select("*")
@@ -27,7 +27,7 @@ export default function TodoApp() {
     fetchTasks()
   }, [updateTrigger])
 
-  // ★ POST（追加）
+  // POST（追加）
   const addTask = async (name: string) => {
     if (!name.trim()) return
 
@@ -38,13 +38,13 @@ export default function TodoApp() {
     setUpdateTrigger(!updateTrigger)
   }
 
-  // ★ DELETE（削除）
+  // DELETE（削除）
   const deleteTask = async (id: string) => {
     await supabase.from("tasks").delete().eq("id", id)
     setUpdateTrigger(!updateTrigger)
   }
 
-  // ★ PUT（編集）
+  // PUT（編集）
   const editTask = async (id: string, name: string) => {
     const target = tasks.find((t) => t.id === id)
     if (!target) return
