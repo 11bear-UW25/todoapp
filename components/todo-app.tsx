@@ -14,7 +14,7 @@ export default function TodoApp() {
   const [tasks, setTasks] = useState<Task[]>([])
   const [updateTrigger, setUpdateTrigger] = useState(false)
 
-  // ★ GET（一覧取得）←原型の useEffect を維持
+  // GET（一覧取得）
   useEffect(() => {
     const fetchTasks = async () => {
       const res = await fetch(
@@ -33,7 +33,7 @@ export default function TodoApp() {
     fetchTasks()
   }, [updateTrigger])
 
-  // ★ POST（追加）←原型を維持
+  // POST（追加）
   const addTask = async (name: string) => {
     if (!name.trim()) return
 
@@ -53,7 +53,7 @@ export default function TodoApp() {
     setUpdateTrigger(!updateTrigger)
   }
 
-  // ★ DELETE（削除）←原型を維持
+  // DELETE（削除）
   const deleteTask = async (id: string) => {
     await fetch(`${SUPABASE_URL}/rest/v1/tasks?id=eq.${id}`, {
       method: "DELETE",
@@ -66,7 +66,7 @@ export default function TodoApp() {
     setUpdateTrigger(!updateTrigger)
   }
 
-  // ★ PUT（編集）←原型を維持（completed を保持）
+  // PUT（編集）
   const editTask = async (id: string, name: string) => {
     const target = tasks.find((t) => t.id === id)
     if (!target) return
@@ -86,7 +86,7 @@ export default function TodoApp() {
     setUpdateTrigger(!updateTrigger)
   }
 
-  // ★ return（原型を維持）
+  // return
   return (
     <div className="flex flex-col items-center">
       <h1 className="text-3xl font-bold mb-8">Todoアプリ</h1>
