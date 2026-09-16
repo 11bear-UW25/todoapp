@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import TaskForm from "./task-form"
 import TaskList from "./task-list"
 import type { Task } from "@/types/task"
-import { v4 as uuidv4 } from "uuid"
+
 
 export default function TodoApp() {
 
