@@ -7,10 +7,9 @@ import type { Task } from "@/types/task"
 import { v4 as uuidv4 } from "uuid"
 import { createClient } from "@supabase/supabase-js"
 
-// v0 では supabase.ts を使えないので、ここで直接クライアントを作る
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
 export default function TodoApp() {
