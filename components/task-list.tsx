@@ -3,8 +3,8 @@ import TaskItem from "./task-item"
 
 interface TaskListProps {
   tasks: Task[]
-  onDeleteTask: (id: number) => void
-  onEditTask: (id: number, name: string) => void
+  onDeleteTask: (id: string) => void
+  onEditTask: (id: string, name: string) => void
 }
 
 export default function TaskList({ tasks, onDeleteTask, onEditTask }: TaskListProps) {
@@ -15,7 +15,12 @@ export default function TaskList({ tasks, onDeleteTask, onEditTask }: TaskListPr
   return (
     <ul className="w-full max-w-md space-y-2">
       {tasks.map((task) => (
-        <TaskItem key={task.id} task={task} onDelete={onDeleteTask} onEdit={onEditTask} />
+        <TaskItem
+          key={task.id}
+          task={task}
+          onDelete={onDeleteTask}
+          onEdit={onEditTask}
+        />
       ))}
     </ul>
   )

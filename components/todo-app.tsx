@@ -46,17 +46,20 @@ export default function TodoApp() {
     setUpdateTrigger(!updateTrigger);
   };
 
-  const editTask = async (id: string, name: string) => {
-    const completed = false;
+ const editTask = async (id: string, name: string) => {
+  const target = tasks.find((t) => t.id === id);
+  if (!target) return;
 
-    await fetch("/api/tasks", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id, name, completed }),
-    });
+  const completed = target.completed;
 
-    setUpdateTrigger(!updateTrigger);
-  };
+  await fetch("/api/tasks", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id, name, completed }),
+  });
+
+  setUpdateTrigger(!updateTrigger);
+};
 
   return (
     <div className="flex flex-col items-center">
