@@ -15,26 +15,25 @@ export default function TodoApp() {
   const [updateTrigger, setUpdateTrigger] = useState(false)
 
   // GET（一覧取得）
-  useEffect(() => {
-    const fetchTasks = async () => {
-      const res = await fetch(
-        `${SUPABASE_URL}/rest/v1/tasks?select=*`,
-        {
-          headers: {
-            apikey: SUPABASE_ANON_KEY,
-            Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-          },
-        }
-      )
-      const data = await res.json()
-      setTasks(data)
-    }
+useEffect(() => {
+  const fetchTasks = async () => {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/tasks?select=*`,
+      {
+        headers: {
+          apikey: SUPABASE_ANON_KEY,
+          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+        },
+      }
+    )
+
+    const data = await res.json()
 
     setTasks(Array.isArray(data) ? data : [])
   }
-  
-    fetchTasks()
-  }, [updateTrigger])
+
+  fetchTasks()
+}, [updateTrigger])
 
   // POST（追加）
   const addTask = async (name: string) => {
