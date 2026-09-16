@@ -10,7 +10,6 @@ import { createClient } from "@supabase/supabase-js"
 const SUPABASE_URL = "https://xxxx.supabase.co"
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp3cmVpZ2huc3J1eW5zY3FwcGNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1MjA3MDMsImV4cCI6MjEwNTA5NjcwM30.KVxmyIGrhR_WC2eEVaZ0vtTRr3MjhDW7cMsvr1q0I6w"
 
-
 export default function TodoApp() {
 
   const [tasks, setTasks] = useState<Task[]>([])
