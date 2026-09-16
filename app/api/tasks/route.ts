@@ -11,6 +11,7 @@ export async function POST(request: Request) {
   return NextResponse.json({ message: "タスク追加成功", data }, { status: 201 });
 }
 
+
 export async function GET() {
   const { data, error } = await supabase
     .from("tasks")
