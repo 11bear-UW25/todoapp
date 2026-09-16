@@ -30,6 +30,9 @@ export default function TodoApp() {
       setTasks(data)
     }
 
+    setTasks(Array.isArray(data) ? data : [])
+  }
+  
     fetchTasks()
   }, [updateTrigger])
 
