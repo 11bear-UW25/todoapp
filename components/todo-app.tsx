@@ -29,7 +29,7 @@ export default function TodoApp() {
   const addTask = async (name: string) => {
   if (!name.trim()) return
 
-  const id = crypto.randomUUID()   // ← ここで自動生成される
+  const id = crypto.randomUUID() 
   const completed = false
 
   await fetch(`${SUPABASE_URL}/rest/v1/tasks`, {
