@@ -18,43 +18,38 @@ export default function TodoApp() {
   }, [updateTrigger])
 
   const addTask = async (name: string) => {
-    // 空欄かどうかをチェック
-    if (!name.trim()) {
-      console.error("タスク名は必須です")
-      return;
-    }
+    if (!name.trim()) return;
 
-    const id = uuidv4() // 一意なIDを生成
-    const completed = false // 最初は未完了
+    const id = uuidv4();
+    const completed = false;
 
     try {
-      const response = await fetch("/api/tasks", {
+      await fetch("/api/tasks", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id, name, completed }),
-      })
+      });
     } catch (error) {
-      console.error("エラーが発生しました", error)
+      console.error("エラーが発生しました", error);
     }
 
     setUpdateTrigger(!updateTrigger);
-  }
+  };
 
   const deleteTask = async (id: string) => {
-    const response = await fetch("/api/task", {
+    await fetch("/api/tasks", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id }),
     });
 
-    const data = await response.json();
     setUpdateTrigger(!updateTrigger);
   };
 
   const editTask = async (id: string, name: string) => {
     const completed = false;
 
-    const response = await fetch("/api/task", {
+    await fetch("/api/tasks", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id, name, completed }),
