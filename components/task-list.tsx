@@ -7,9 +7,20 @@ interface TaskListProps {
   onEditTask: (id: string, name: string) => void
 }
 
-export default function TaskList({ tasks, onDeleteTask, onEditTask }: TaskListProps) {
-  if (tasks.length === 0) {
-    return <p className="text-muted-foreground">タスクがありません。</p>
+export default function TaskList({
+  tasks,
+  onDeleteTask,
+  onEditTask,
+}: TaskListProps) {
+  // デバッグ用
+  console.log("TaskList tasks:", tasks)
+
+  if (!Array.isArray(tasks) || tasks.length === 0) {
+    return (
+      <p className="text-muted-foreground">
+        タスクがありません。
+      </p>
+    )
   }
 
   return (

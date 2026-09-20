@@ -3,8 +3,8 @@
 import { useState, useEffect } from "react"
 import TaskForm from "./task-form"
 import TaskList from "./task-list"
-import type { Task } from "@/types/task"
-
+import type { Task } from "@/types/task.ts"
+import { v4 as uuidv4 } from "uuid"
 export default function TodoApp() {
 
   // タスク一覧
@@ -55,17 +55,19 @@ export default function TodoApp() {
   }
 
   // タスク編集（PUT）
-  const editTask = async (id: string, name: string) => {
-    const completed = false
+const editTask = async (id: string, name: string) => {
+  const completed = false
 
-    await fetch("/api/tasks", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id, name, completed }),
-    })
+  await fetch("/api/tasks", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id, name, completed }),
+  })
 
-    setUpdateTrigger(!updateTrigger)
-  }
+  setUpdateTrigger(!updateTrigger)
+}
+
+console.log("TodoApp tasks:", tasks)
 
   return (
     <div className="flex flex-col items-center">
