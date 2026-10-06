@@ -4,7 +4,7 @@ import { supabase } from "@/lib/supabase";
 // POST
 export async function POST(request: Request) {
   try {
-    const { name, completed } = await request.json();
+    const { id, name, completed } = await request.json();
 
     if (!name) {
       return NextResponse.json({ error: "名前は必須です" }, { status: 400 });
@@ -12,7 +12,7 @@ export async function POST(request: Request) {
 
     const { data, error } = await supabase
       .from("tasks")
-      .insert([{ name, completed }])
+      .insert([{ id, name, completed }])
       .select();
 
     if (error) throw error;
